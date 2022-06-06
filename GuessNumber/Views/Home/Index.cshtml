@@ -1,0 +1,62 @@
+﻿@model GuessNumber.Models.NumberModel
+@{
+    ViewData["Title"] = "Home Page";
+    int counter = 1;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Willkommen zum Zahlenraten</h1>
+
+
+    @if(Model.NumberGuessed == false)
+    {
+        @using (Html.BeginForm())
+        {
+            <div>
+                @Html.LabelFor(Model => Model.GuessedNumber)
+                <div>
+                    @Html.EditorFor(Model => Model.GuessedNumber)
+                    @Html.ValidationMessageFor(Model => Model.GuessedNumber, "")
+                </div>
+            </div>
+            <div >
+                <div>
+                    <input type="submit" value="Eingabe"/>
+                </div>
+            </div>
+        }
+    }
+  
+
+    @if(Model.GuessedNumber != null && Model.Guesses != null)
+    {
+        if(Model.NumberGuessed == true)
+        {
+            <p> Hurrah! Alles richtig gemacht. @Model.GuessedNumber ist die richtige Zahl</p>
+            <p> Du hast @Model.Guesses.Count Versuche benötigt</p>
+            
+            <form asp-controller="Home" asp-action="Index">
+                <button value="Reset" name="Reset" style="width: 200px; height: 40px";>Nochmal spielen</button>
+            </form> 
+        }
+        else
+        {
+            foreach(var item in Model.Guesses)
+            {
+                if(item > Model.RandomNumber)
+                {
+                    <p>Versuch @counter: Ihre Zahl <b>@item</b> ist zu groß</p>
+                }
+                if(item < Model.RandomNumber)
+                {
+                    <p>Versuch @counter: Ihre Zahl  <b>@item</b> ist zu klein</p>
+                }
+
+                counter++;
+            }
+            
+        }
+ 
+    }
+
+</div>
